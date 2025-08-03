@@ -4,8 +4,8 @@ using ToDo.UI.Models;
 namespace ToDo.UI.Data;
 public class TodoDbContext:DbContext
 {
-    private readonly DbSet<Todos> todos;
-    private readonly DbSet<Tasks> tasks;
+    public virtual DbSet<Todos> Todos { get; set; }
+    public virtual DbSet<Tasks> Tasks { get; set; }
 
     public TodoDbContext(DbContextOptions<TodoDbContext> options) 
         : base(options)

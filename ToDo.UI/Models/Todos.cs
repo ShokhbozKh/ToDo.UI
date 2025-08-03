@@ -8,7 +8,7 @@ public class Todos
     public string Name { get; set; }
     public string Description { get; set; }
     public TodoStatus ToDoStatus { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public double Progress { get; set; } = 0.0;
+    public DateTime CreatedAt { get; set; } 
+    public double Progress { get; set; }
     public IEnumerable<Tasks> Tasks { get; set; } = new List<Tasks>();
 }
