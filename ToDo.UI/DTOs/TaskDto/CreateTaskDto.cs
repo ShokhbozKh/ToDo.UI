@@ -1,15 +1,13 @@
 ﻿using ToDo.UI.Const;
+using ToDo.UI.Models;
 
-namespace ToDo.UI.Models;
+namespace ToDo.UI.DTOs.TaskDto;
 
-public class Tasks
+public class CreateTaskDto
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public TasksStatus TaskStatus { get; set; }
+    public TasksStatus taskStatus { get; set; } = TasksStatus.NotStarted;
     public int DurationInMinutes { get; set; }
     public int TodoId { get; set; }
-    public Todos Todo { get; set; }
-
 }
