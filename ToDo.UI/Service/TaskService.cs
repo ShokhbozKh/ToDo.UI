@@ -18,6 +18,7 @@ public class TaskService : ITaskService
         var tasks = await _context.Tasks
             .Include(t => t.Todo)
             .ToListAsync();
+
         var taskDtos = tasks.Select(t => new ReadTaskDto
         {
             Id = t.Id,
@@ -25,7 +26,7 @@ public class TaskService : ITaskService
             Description = t.Description,
             TasksStatus = t.TaskStatus,
             DurationInMinutes = t.DurationInMinutes,
-            TodoId = t.TodoId
+            TodoId = t.TodoId,
         }).ToList();
         if (taskDtos == null || !taskDtos.Any())
         {
@@ -33,7 +34,6 @@ public class TaskService : ITaskService
         }
         return taskDtos;
     }
-
     public async Task<ReadTaskDto> GetTaskByIdAsync(int id)
     {
         var task = await _context.Tasks
@@ -50,7 +50,7 @@ public class TaskService : ITaskService
             Description = task.Description,
             TasksStatus = task.TaskStatus,
             DurationInMinutes = task.DurationInMinutes,
-            TodoId = task.TodoId
+            TodoId = task.TodoId,
         };
         return taskDto;
     }
@@ -64,9 +64,9 @@ public class TaskService : ITaskService
         {
             Name = newTask.Name,
             Description = newTask.Description,
-            TaskStatus = newTask.taskStatus,
+            TaskStatus = newTask.TasksStatus,
             DurationInMinutes = newTask.DurationInMinutes,
-            TodoId = newTask.TodoId
+            TodoId = (int)newTask.TodoId,
         };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
@@ -81,14 +81,45 @@ public class TaskService : ITaskService
         };
         return taskDto;
     }
-
-
-    public Task<ReadTaskDto> UpdateTaskAsync(int id, UpdateTaskDto task)
+    public async Task<ReadTaskDto> UpdateTaskAsync(int id, UpdateTaskDto task)
     {
-        throw new NotImplementedException();
+        var existingTask = await _context.Tasks
+            .Include(t=>t.Todo)
+            .FirstOrDefaultAsync(t => t.Id == id);
+        if (existingTask == null)
+        {
+            return null;
+        }
+
+        existingTask.Name = task.Name?? existingTask.Name;
+        existingTask.Description = task.Description ?? existingTask.Description;
+        existingTask.TaskStatus = task.TasksStatus != default ? task.TasksStatus : existingTask.TaskStatus;
+        existingTask.DurationInMinutes = task.DurationInMinutes !=default ? task.DurationInMinutes:existingTask.DurationInMinutes;
+        existingTask.TodoId = task.TodoId != default ? task.TodoId: existingTask.TodoId;
+        _context.Update(existingTask);
+        await _context.SaveChangesAsync();
+
+        var updatedTaskDto = new ReadTaskDto
+        {
+            Id = existingTask.Id,
+            Name = existingTask.Name,
+            Description = existingTask.Description,
+            TasksStatus = existingTask.TaskStatus,
+            DurationInMinutes = existingTask.DurationInMinutes,
+            TodoId = existingTask.TodoId
+        };
+        return updatedTaskDto;
     }
-    public Task<bool> DeleteTaskAsync(int id)
+    public async Task<bool> DeleteTaskAsync(int id)
     {
-        throw new NotImplementedException();
+        var task = await _context.Tasks
+            .FirstOrDefaultAsync(t => t.Id == id);
+        if (task == null)
+        {
+            return false;
+        }
+        _context.Tasks.Remove(task);    
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

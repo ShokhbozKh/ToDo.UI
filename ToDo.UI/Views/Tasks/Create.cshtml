@@ -1,19 +1,19 @@
-﻿@model ToDo.UI.DTOs.TodoDto.ReadToDoDto
+﻿@model ToDo.UI.DTOs.TaskDto.CreateTaskDto
 @using ToDo.UI.Const
+@using ToDo.UI.DTOs.TodoDto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create";
 }
 
-<h1>Edit</h1>
+<h1>Create</h1>
 
-<h4>Todos</h4>
+<h4>Tasks</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -25,17 +25,21 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ToDoStatus" class="control-label"></label>
-                <select asp-for="ToDoStatus" class="form-control" asp-items="@Html.GetEnumSelectList<TodoStatus>()"></select>
-                <span asp-validation-for="ToDoStatus" class="text-danger"></span>
+                <label asp-for="TasksStatus" class="control-label"></label>
+                <select asp-for="TasksStatus" class="form-control" asp-items="@Html.GetEnumSelectList<TasksStatus>()" disabled></select>
+                <span asp-validation-for="TasksStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Progress" class="control-label"></label>
-                <input asp-for="Progress" class="form-control"  disabled  placeholder="logika ishlataman bunga"> </input>
-                <span asp-validation-for="Progress" class="text-danger" ></span>
+                <label asp-for="DurationInMinutes" class="control-label"></label>
+                <input asp-for="DurationInMinutes" class="form-control" />
+                <span asp-validation-for="DurationInMinutes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="TodoId" class="control-label"></label>
+                <select asp-for="TodoId" class="form-control" asp-items="ViewBag.TodoList"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

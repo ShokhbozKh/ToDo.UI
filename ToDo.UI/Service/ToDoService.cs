@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDo.UI.Data;
+using ToDo.UI.DTOs.TaskDto;
 using ToDo.UI.DTOs.TodoDto;
 using ToDo.UI.Models;
 
@@ -26,7 +27,16 @@ namespace ToDo.UI.Service
                 Description = t.Description,
                 ToDoStatus = t.ToDoStatus,
                 CreatedAt = t.CreatedAt,
-                Progress = t.Progress
+                Progress = t.Progress,
+                Tasks = t.Tasks.Select(task => new ReadTaskDto
+                {
+                    Id = task.Id,
+                    Name = task.Name,
+                    Description = task.Description,
+                    TasksStatus = task.TaskStatus,
+                    DurationInMinutes = task.DurationInMinutes,
+                    TodoId = task.TodoId
+                }).ToList()
             }).ToList();
             if (todoDtos == null || !todoDtos.Any())
             {
@@ -90,13 +100,6 @@ namespace ToDo.UI.Service
             existingTodo.Description = todo.Description ?? existingTodo.Description;
             existingTodo.ToDoStatus = todo.ToDoStatus != default ? todo.ToDoStatus : existingTodo.ToDoStatus;
 
-            var updatedToda = new Todos
-            {
-                Name = existingTodo.Name,
-                Description = existingTodo.Description,
-                ToDoStatus = existingTodo.ToDoStatus
-            };
-            _context.Update(updatedToda);
             await _context.SaveChangesAsync();
             var todoDto = new ReadToDoDto
             {
