@@ -10,6 +10,7 @@ builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<TodoDbContext>();
 builder.Services.AddScoped<IToDoService, ToDoService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 
 var app = builder.Build();

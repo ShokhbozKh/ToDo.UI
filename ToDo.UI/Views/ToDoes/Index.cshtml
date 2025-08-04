@@ -4,62 +4,78 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>ToDo List</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success mb-3">
+        <i class="bi bi-plus-circle"></i> Create New
+    </a>
+
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-bordered">
+    <thead class="table-light">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ToDoStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Progress)
-            </th>
-            <th></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Progress</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            <tr style="color:blueviolet">
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.ToDoStatus</td>
+                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@item.Progress</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Id)
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white me-1">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ToDoStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Progress)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+
+            </tr>
+
+            @if (item.Tasks != null && item.Tasks.Any())
+            {
+                <tr>
+                    <td colspan="7">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead>
+                                <h4 style="text-align:center; color:blue">Tasks</h4>
+                                <tr class="table-secondary">
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>DurationInMinutes</th>
+                                    <th>ToDoId</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in item.Tasks)
+                                {
+                                    <tr>
+                                        <td>@task.Id</td>
+                                        <td>@task.Name</td>
+                                        <td>@task.Description</td>
+                                        <td>@task.TasksStatus</td>
+                                        <td>@task.DurationInMinutes</td>
+                                        <td>@task.TodoId</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>

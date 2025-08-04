@@ -1,0 +1,60 @@
+﻿@using ToDo.UI.Const
+@model ToDo.UI.DTOs.TaskDto.ReadTaskDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ReadTaskDto</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" disabled/>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control"  disabled/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TasksStatus" class="control-label"></label>
+                <select asp-for="TasksStatus" class="form-control" asp-items="@Html.GetEnumSelectList<TasksStatus>()"></select>
+                <span asp-validation-for="TasksStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DurationInMinutes" class="control-label"></label>
+                <input asp-for="DurationInMinutes" class="form-control" />
+                <span asp-validation-for="DurationInMinutes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TodoId" class="control-label"></label>
+                <select asp-for="TodoId" class="form-control" asp-items="@ViewBag.ToDoNames" ></select>
+                <span asp-validation-for="TodoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
