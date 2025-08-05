@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>ToDo List</h1>
+<h1 style="text-align:center">Result All ToDos and Its Tasks </h1>
 
 <p>
     <a asp-action="Create" class="btn btn-success mb-3">
@@ -33,7 +33,7 @@
                 <td>@item.Name</td>
                 <td>@item.Description</td>
                 <td>@item.ToDoStatus</td>
-                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@item.CreatedAt</td>
                 <td>@item.Progress</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">Edit</a>
@@ -73,6 +73,7 @@
                                 }
                             </tbody>
                         </table>
+                        <hr style="color:red; border:dotted" />
                     </td>
                 </tr>
             }

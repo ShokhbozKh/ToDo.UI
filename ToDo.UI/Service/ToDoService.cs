@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ToDo.UI.Const;
 using ToDo.UI.Data;
 using ToDo.UI.DTOs.TaskDto;
 using ToDo.UI.DTOs.TodoDto;
@@ -20,6 +21,7 @@ namespace ToDo.UI.Service
             var todos = await _context.Todos
                 .Include(t => t.Tasks)
                 .ToListAsync();
+
             var todoDtos = todos.Select(t => new ReadToDoDto
             {
                 Id = t.Id,
@@ -27,7 +29,9 @@ namespace ToDo.UI.Service
                 Description = t.Description,
                 ToDoStatus = t.ToDoStatus,
                 CreatedAt = t.CreatedAt,
-                Progress = t.Progress,
+                Progress = t.Tasks.Any() 
+                    ? Math.Round((double)t.Tasks.Count(task => task.TaskStatus == TasksStatus.Completed) / t.Tasks.Count() * 100, 2)
+                    : 0,
                 Tasks = t.Tasks.Select(task => new ReadTaskDto
                 {
                     Id = task.Id,
@@ -38,6 +42,7 @@ namespace ToDo.UI.Service
                     TodoId = task.TodoId
                 }).ToList()
             }).ToList();
+
             if (todoDtos == null || !todoDtos.Any())
             {
                 return new List<ReadToDoDto>();
