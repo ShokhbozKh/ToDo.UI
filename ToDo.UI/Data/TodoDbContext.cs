@@ -13,4 +13,6 @@ public class TodoDbContext:DbContext
         : base(options)
     {
     }
+    public DbSet<ToDo.UI.DTOs.TodoDto.ReadToDoDto> ReadToDoDto { get; set; } = default!;
+    public DbSet<ToDo.UI.DTOs.TodoDto.CreateToDoDto> CreateToDoDto { get; set; } = default!;
 }
