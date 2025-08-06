@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ToDo.UI.Const;
 using ToDo.UI.DTOs.TodoDto;
 using ToDo.UI.Service;
+using X.PagedList.Extensions;
+
+
 
 namespace ToDo.UI.Controllers
 {
@@ -15,9 +19,43 @@ namespace ToDo.UI.Controllers
                 throw new ArgumentNullException(nameof(toDoService));
         }
         // GET: TodoController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string? searchString=null, string? sortOrder=null, TodoStatus? selectedStatus=null)
         {
-            var todos = await _context.GetAllTodosAsync();
+            var todos = await _context.GetAllTodosAsync(searchString);
+            var countTodos = todos.Count();
+
+            ViewBag.Status = new SelectList(Enum.GetValues(typeof(TodoStatus)),selectedStatus
+                );
+                
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["SortName"] = sortOrder == "name_desc" ? "name_asc" : "name_desc";
+            ViewData["SortDescription"] = sortOrder == "des_desc" ? "des_asc" : "des_desc";
+            ViewBag.SortDate = sortOrder == "date_desc" ? "date_asc" : "date_desc";
+            ViewBag.SortProgress = sortOrder == "prog_desc" ? "prog_asc" : "prog_desc";
+            //filter
+            if(selectedStatus.HasValue)
+            {
+                 todos = todos.Where(f => f.ToDoStatus == selectedStatus.Value).ToList();
+            }
+            
+            todos = sortOrder switch
+            {
+                "name_desc" => todos.OrderByDescending(x => x.Name).ToList(),
+                "name_asc" => todos.OrderBy(x => x.Name).ToList(),
+
+                "des_desc" => todos.OrderByDescending(x => x.Description).ToList(),
+                "des_asc" => todos.OrderBy(x => x.Description).ToList(),
+
+                "date_desc"=>todos.OrderByDescending(x=>x.CreatedAt).ToList(),
+                "date_asc"=>todos.OrderBy(x=>x.CreatedAt).ToList(),
+
+                "prog_desc"=>todos.OrderByDescending(x=>x.Progress).ToList(),
+                "prog_asc"=>todos.OrderBy(x=>x.Progress).ToList(),
+
+                _ =>todos.OrderBy(n=>n.Name).ToList()
+
+            };
+
             return View(todos);
         }
 

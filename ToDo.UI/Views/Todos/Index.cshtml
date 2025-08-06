@@ -1,4 +1,6 @@
-﻿@model IEnumerable<ToDo.UI.DTOs.TodoDto.ReadToDoDto>
+﻿@model IPagedList<ToDo.UI.DTOs.TodoDto.ReadToDoDto>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
 
 @{
     ViewData["Title"] = "Index";
@@ -6,10 +8,20 @@
 
 <h1 style="text-align:center">Result All ToDos and Its Tasks </h1>
 
+
 <p>
-    <a asp-action="Create" class="btn btn-success mb-3">
-        <i class="bi bi-plus-circle"></i> Create New
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle " ></i> Create New
     </a>
+    <div>
+        <form asp-controller="Todos" asp-action="Index">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <input type="text" name="searchString" placeholder="search name and description" value="@ViewData["CurrentFilter"]" />
+            <select></select>
+            <p>Result: @ViewBag.SearchResult</p>
+                
+        </form>
+    </div>
 
 </p>
 
@@ -17,7 +29,7 @@
     <thead class="table-light">
         <tr>
             <th>Id</th>
-            <th>Name</th>
+            <th ><a asp-action="Index" asp-controller="Todos" asp-route-sortOrder="@ViewData["NameSortParm"]">Name</a></th>
             <th>Description</th>
             <th>Status</th>
             <th>Created At</th>
@@ -49,7 +61,7 @@
                     <td colspan="7">
                         <table class="table table-sm table-hover mb-0">
                             <thead>
-                                <h4 style="text-align:center; color:blue">Tasks</h4>
+                                <h5 style="text-align:center; color:blue"> Tasks</h5>
                                 <tr class="table-secondary">
                                     <th>Id</th>
                                     <th>Name</th>
@@ -80,3 +92,8 @@
         }
     </tbody>
 </table>
+<!-- Pagination tugmalari -->
+<div>
+    <!-- Pagination tugmalari -->
+    
+</div>

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ToDo.UI.DTOs.TodoDto.ReadToDoDto>
+﻿@using ToDo.UI.Const
+@model IEnumerable<ToDo.UI.DTOs.TodoDto.ReadToDoDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +10,17 @@
 <p>
     <a asp-action="Create" type="button" class="btn btn-success">Create New</a>
 </p>
+<dev> 
+    <form asp-controller="Todo" asp-action="Index">
+        <div class="input-group mb-3">
+            <select name="selectedStatus" asp-items="@ViewBag.Status">
+               <option value="">All status</option>  
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <input type="text" name="searchString" class="form-control" placeholder="Search by name or description" value="@ViewData["CurrentFilter"]" />
+        </div>
+    </form>
+</dev>
 <table class="table table-bordered border-primary">
     <thead class="table-light" style="text-align:center">
         <tr >
@@ -16,19 +28,20 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+               <a asp-action="Index" asp-controller="Todo" asp-route-sortOrder="@ViewData["SortName"]"> @Html.DisplayNameFor(model => model.Name) </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SortDescription"]">@Html.DisplayNameFor(model => model.Description) </a>
+                
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ToDoStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.SortDate">@Html.DisplayNameFor(model => model.CreatedAt)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Progress)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.SortProgress">@Html.DisplayNameFor(model => model.Progress)</a>
             </th>
             <th>
                 Todo Actions
@@ -59,7 +72,7 @@
             <td>
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                         <a type="button" class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a type="button" class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a type="button" class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
                         <a type="button" class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 
                     </div>

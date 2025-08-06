@@ -5,7 +5,7 @@ namespace ToDo.UI.Service;
 
 public interface IToDoService
 {
-    Task<IEnumerable<ReadToDoDto>> GetAllTodosAsync();
+    Task<IEnumerable<ReadToDoDto>> GetAllTodosAsync(string? searchString=null);
     Task<ReadToDoDto> GetTodoByIdAsync(int id);
     Task<ReadToDoDto> CreateTodoAsync(CreateToDoDto todo);
     Task<ReadToDoDto> UpdateTodoAsync(int id, UpdateToDoDto todo);

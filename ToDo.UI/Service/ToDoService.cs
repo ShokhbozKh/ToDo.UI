@@ -16,13 +16,18 @@ namespace ToDo.UI.Service
                 throw new ArgumentNullException(nameof(todoDbContext));
         }
      
-        public async Task<IEnumerable<ReadToDoDto>> GetAllTodosAsync()
+        public async Task<IEnumerable<ReadToDoDto>> GetAllTodosAsync(string? searchString)
         {
-            var todos = await _context.Todos
+            var todos = _context.Todos
                 .Include(t => t.Tasks)
-                .ToListAsync();
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                todos = todos.Where(t => t.Name.Contains(searchString) ||
+                                t.Description.Contains(searchString));
+            }
 
-            var todoDtos = todos.Select(t => new ReadToDoDto
+                var todoDtos = todos.Select(t => new ReadToDoDto
             {
                 Id = t.Id,
                 Name = t.Name,
@@ -47,7 +52,7 @@ namespace ToDo.UI.Service
             {
                 return new List<ReadToDoDto>();
             }
-            return todoDtos;
+            return await Task.FromResult(todoDtos);
         }
 
         public async Task<ReadToDoDto> GetTodoByIdAsync(int id)
