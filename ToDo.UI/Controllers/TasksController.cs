@@ -47,7 +47,7 @@ namespace ToDo.UI.Controllers
             {
                 DurationInMinutes = 0,
             };
-            var todos = await _toDoService.GetAllTodosAsync();
+            var todos = await _toDoService.GetAllTodosAsync(null);
             ViewBag.TodoList = new SelectList(todos, "Id", "Name");
             return View(newTaskDto);
         }
@@ -76,7 +76,7 @@ namespace ToDo.UI.Controllers
             }
             var todoName = await _toDoService.GetTodoByIdAsync(id);
            
-            var todos = await _toDoService.GetAllTodosAsync();
+            var todos = await _toDoService.GetAllTodosAsync(null);
             ViewBag.TodoNames = new SelectList(todos, "Id","Name", id);
             return View(task);
         }
@@ -91,7 +91,7 @@ namespace ToDo.UI.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            var todos = await _toDoService.GetAllTodosAsync();
+            var todos = await _toDoService.GetAllTodosAsync(null);
             ViewBag.TodoNames = new SelectList(todos, "Id", "Name");
 
             ModelState.AddModelError("", "Failed to update Task.");

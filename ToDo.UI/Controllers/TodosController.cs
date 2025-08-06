@@ -5,18 +5,33 @@ using ToDo.UI.Service;
 
 namespace ToDo.UI.Controllers
 {
-    public class ToDoesController : Controller
+    public class TodosController : Controller
     {
         private readonly IToDoService _context;
-        public ToDoesController(IToDoService toDoService)
+        public TodosController(IToDoService toDoService)
         {
             _context = toDoService ??
                 throw new ArgumentNullException(nameof(toDoService));
         }
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string? searchString, string sortOrder)
         {
-            ViewBag.ResultProgres = 25;
-            var todos = await _context.GetAllTodosAsync();
+            var todos = await _context.GetAllTodosAsync(searchString);
+            var countTodos = todos.Count();
+            ViewData["CurrentFilter"] = searchString;
+            ViewBag.SearchResult = countTodos;
+            ViewData["nameSortParm"] = string.IsNullOrWhiteSpace(sortOrder) ? "desc":"asc";
+            switch(sortOrder)
+            {
+                case "desc":
+                    todos = todos.OrderByDescending(t => t.Name);
+                    break;
+                case "asc":
+                    todos = todos.OrderBy(t => t.Name);
+                    break;
+                default:
+                    todos = todos.OrderBy(t => t.Name);
+                    break;
+            }
             return View(todos);
         }
         public async Task<ActionResult> Details(int id)
@@ -63,7 +78,6 @@ namespace ToDo.UI.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var todo = await _context.GetTodoByIdAsync(id);
-            ViewBag.ResultProgres = 25;
             if (todo == null)
             {
                 return NotFound();
